@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>I AM A POPUP</div>
+    <div id="logger" style="width: 75%; float: left; background-color: lightgray; overflow-y: scroll; height: 300px;">
+
+    </div>
+
+    <div>
+        <input type="text" id="message">
+    </div>
+
+    <button onclick="sendMessage()">send message</button>
+
+    <script src="../xwindowcomms.js"></script>
+    <script>
+        var xWindowsComms1 = xWindowComms();
+        xWindowsComms1.popup.initiate(function (e) {
+            var logString = '';
+            if (typeof event.data == 'object') {
+                logString = (JSON && JSON.stringify ? JSON.stringify(event.data) : event.data)
+            } else {
+                logString = event.data;
+            }
+
+            var logger = document.getElementById("logger");
+
+            logger.innerHTML += logString + '<br />';
+        }, true);
+
+        function sendMessage (eventSource, payload){
+            var message = document.getElementById('message').value;
+            var payload = {
+                action: 'standard',
+                message: message
+            };
+            xWindowsComms1.popup.sendMessage(payload);
+        }
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Hi i am the parent</h1>
+
+<div id="logger" style="width: 75%; float: left; background-color: lightgray; overflow-y: scroll; height: 300px;">
+
+</div>
+<div style="width: 20%; padding-left: 25px; float: left;">
+    <div>
+        <input type="text" id="message">
+    </div>
+    <div>
+        <button onclick="openPopup()">open</button>
+    </div>
+    <div>
+        <button onclick="openPopup2()">open2</button>
+    </div>
+    <div>
+        <button onclick="sendMessage()">send message</button>
+    </div>
+</div>
+<div style="clear: both"></div>
+<script src="../xwindowcomms.js"></script>
+<script>
+
+    var xWindowsComms1 = new xWindowComms();
+    var xWindowsComms2 = new xWindowComms();
+
+    xWindowsComms1.parent.receiver(function(e){
+        var logString = '';
+        if (typeof event.data == 'object') {
+
+
+
+            logString = (JSON && JSON.stringify ? JSON.stringify(event.data) : event.data)
+        } else {
+            logString = event.data;
+        }
+
+        var logger = document.getElementById("logger");
+
+        logger.innerHTML += '1: ' + logString + '<br />';
+    }, true);
+
+    xWindowsComms2.parent.receiver(function(e){
+        var logString = '';
+        if (typeof event.data == 'object') {
+
+
+
+            logString = (JSON && JSON.stringify ? JSON.stringify(event.data) : event.data)
+        } else {
+            logString = event.data;
+        }
+
+        var logger = document.getElementById("logger");
+
+        logger.innerHTML += '2: ' + logString + '<br />';
+    }, true);
+
+
+    function openPopup (){
+        xWindowsComms1.parent.initiate('child.html', 'mywindow', 'width=800, height=300');
+
+    }
+
+    function openPopup2 (){
+        xWindowsComms2.parent.initiate('child.html', 'mywindow2', 'width=800, height=300');
+
+    }
+
+    function sendMessage (){
+        var message = document.getElementById('message').value;
+        var payload = {
+            action: 'standard',
+            message: message
+        };
+
+        xWindowsComms1.parent.sendMessage(payload);
+    }
+
+    function sendMessage2 (){
+        var message = document.getElementById('message').value;
+        var payload = {
+            action: 'standard',
+            message: message
+        };
+
+        xWindowsComms2.parent.sendMessage(payload);
+    }
+</script>
+</body>
+</html>
