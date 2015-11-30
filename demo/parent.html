@@ -25,13 +25,13 @@
     </div>
 </div>
 <div style="clear: both"></div>
-<script src="../xwindowcomms.js"></script>
+<script src="lib/xwindowcomms.min.js"></script>
 <script>
 
-    var xWindowsComms1 = new xWindowComms();
-    var xWindowsComms2 = new xWindowComms();
+    var xWindowsComms1 = new xWindowComms.parent();
+    var xWindowsComms2 = new xWindowComms.parent();
 
-    xWindowsComms1.parent.receiver(function(e){
+    xWindowsComms1.receiver(function(e){
         var logString = '';
         if (typeof event.data == 'object') {
 
@@ -47,7 +47,7 @@
         logger.innerHTML += '1: ' + logString + '<br />';
     }, true);
 
-    xWindowsComms2.parent.receiver(function(e){
+    xWindowsComms2.receiver(function(e){
         var logString = '';
         if (typeof event.data == 'object') {
 
@@ -65,12 +65,12 @@
 
 
     function openPopup (){
-        xWindowsComms1.parent.initiate('child.html', 'mywindow', 'width=800, height=300');
+        xWindowsComms1.initiate('child.html', 'mywindow', 'width=800, height=300');
 
     }
 
     function openPopup2 (){
-        xWindowsComms2.parent.initiate('child.html', 'mywindow2', 'width=800, height=300');
+        xWindowsComms2.initiate('child.html', 'mywindow2', 'width=800, height=300');
 
     }
 
@@ -81,7 +81,7 @@
             message: message
         };
 
-        xWindowsComms1.parent.sendMessage(payload);
+        xWindowsComms1.sendMessage(payload);
     }
 
     function sendMessage2 (){
@@ -91,7 +91,7 @@
             message: message
         };
 
-        xWindowsComms2.parent.sendMessage(payload);
+        xWindowsComms2.sendMessage(payload);
     }
 </script>
 </body>

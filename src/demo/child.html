@@ -16,10 +16,10 @@
 
     <button onclick="sendMessage()">send message</button>
 
-    <script src="../xwindowcomms.js"></script>
+    <script src="lib/xwindowcomms.min.js"></script>
     <script>
-        var xWindowsComms1 = xWindowComms();
-        xWindowsComms1.popup.initiate(function (e) {
+        var xWindowsComms1 = new xWindowComms.popup();
+        xWindowsComms1.initiate(function (e) {
             var logString = '';
             if (typeof event.data == 'object') {
                 logString = (JSON && JSON.stringify ? JSON.stringify(event.data) : event.data)
@@ -38,7 +38,7 @@
                 action: 'standard',
                 message: message
             };
-            xWindowsComms1.popup.sendMessage(payload);
+            xWindowsComms1.sendMessage(payload);
         }
     </script>
 
