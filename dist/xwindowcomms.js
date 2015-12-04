@@ -1,4 +1,4 @@
-/*! xwindowcomms - v0.0.3 - 2015-12-04
+/*! xwindowcomms - v0.0.4 - 2015-12-04
 * Copyright (c) 2015 ; Licensed  */
 /*jslint browser: true */
 /*global console: false */
