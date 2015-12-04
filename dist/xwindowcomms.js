@@ -13,8 +13,8 @@ window.xWindowComms = window.xWindowComms || (function() {
             this.buffer = [];
             this.id = Math.random();
 
-            this.initiate = function(url, options){
-                this.popup = window.open(url, options);
+            this.initiate = function(url, name, options){
+                this.popup = window.open(url, name, options);
 
                 var payload = {
                     action: 'initiate',
