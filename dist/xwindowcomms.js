@@ -1,4 +1,4 @@
-/*! xwindowcomms - v0.0.2 - 2015-11-30
+/*! xwindowcomms - v0.0.2 - 2015-12-04
 * Copyright (c) 2015 ; Licensed  */
 /*jslint browser: true */
 /*global console: false */
@@ -13,12 +13,13 @@ window.xWindowComms = window.xWindowComms || (function() {
             this.buffer = [];
             this.id = Math.random();
 
-            this.initiate = function(url, name, options){
-                this.popup = window.open(url, name, options);
+            this.initiate = function(url, options){
+                this.popup = window.open(url, options);
 
                 var payload = {
                     action: 'initiate',
-                    status: false
+                    status: false,
+                    type: 'xWindowComms'
                 };
 
                 this.handshake = setInterval(
@@ -30,6 +31,7 @@ window.xWindowComms = window.xWindowComms || (function() {
 
             this.sendMessage = function (payload) {
                 payload.id = this.id;
+                payload.type = 'xWindowComms';
 
                 if (this.connected || payload.action === 'initiate') {
                     this.popup.postMessage(payload, '*');
@@ -49,22 +51,24 @@ window.xWindowComms = window.xWindowComms || (function() {
                     }
 
                     if (typeof event.data === 'object') {
-                        if (event.data.id === this.id) {
-                            if (event.data.action === 'initiate') {
-                                if (event.data.status === true) {
-                                    clearInterval(this.handshake);
-                                    this.connected = true;
-                                    if (this.buffer.length > 0) {
-                                        for (var i = 0; i < this.buffer.length; i++) {
-                                            this.sendMessage(this.buffer[i]);
-                                        }
+                        if (event.data.type === 'xWindowComms'){
+                            if (event.data.id === this.id) {
+                                if (event.data.action === 'initiate') {
+                                    if (event.data.status === true) {
+                                        clearInterval(this.handshake);
+                                        this.connected = true;
+                                        if (this.buffer.length > 0) {
+                                            for (var i = 0; i < this.buffer.length; i++) {
+                                                this.sendMessage(this.buffer[i]);
+                                            }
 
-                                        this.buffer = [];
+                                            this.buffer = [];
+                                        }
                                     }
                                 }
-                            }
 
-                            callback(e);
+                                callback(e);
+                            }
                         }
                     }
                 }.bind(this));
@@ -73,39 +77,63 @@ window.xWindowComms = window.xWindowComms || (function() {
         var popup = function(){
             this.parent = null;
             this.id = null;
+            this.connected = false;
+            this.buffer = [];
+
+
 
             this.initiate = function (callback, debug) {
                 var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
                 var eventer = window[eventMethod];
                 var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
-                eventer(messageEvent, function (e) {
+                var eventFunction = function (e) {
                     if (debug === true) {
                         console.log(e);
                     }
 
                     if (typeof event.data === 'object') {
-                        if (event.data.action === 'initiate') {
-                            var payload = {
-                                action: 'initiate',
-                                status: true
-                            };
+                        if (event.data.type === 'xWindowComms'){
+                            if (event.data.action === 'initiate') {
+                                var payload = {
+                                    action: 'initiate',
+                                    status: true
+                                };
 
-                            this.id = event.data.id;
+                                this.connected = true;
 
-                            this.parent = event.source;
+                                this.id = event.data.id;
 
-                            this.sendMessage(payload);
+                                this.parent = event.source;
+
+                                this.sendMessage(payload);
+
+                                if (this.buffer.length > 0) {
+                                    for (var i = 0; i < this.buffer.length; i++) {
+                                        this.sendMessage(this.buffer[i]);
+                                    }
+
+                                    this.buffer = [];
+                                }
+                            }
+
+                            callback(e);
                         }
                     }
+                }.bind(this);
 
-                    callback(e);
-                }.bind(this));
+                eventer(messageEvent, eventFunction) ;
             };
 
             this.sendMessage = function(payload){
                 payload.id = this.id;
-                this.parent.postMessage(payload, '*');
+                payload.type = 'xWindowComms';
+
+                if (this.connected || payload.action === 'initiate') {
+                    this.parent.postMessage(payload, '*');
+                } else {
+                    this.buffer.push(payload);
+                }
             };
 
         };

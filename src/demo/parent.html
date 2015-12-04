@@ -50,9 +50,6 @@
     xWindowsComms2.receiver(function(e){
         var logString = '';
         if (typeof event.data == 'object') {
-
-
-
             logString = (JSON && JSON.stringify ? JSON.stringify(event.data) : event.data)
         } else {
             logString = event.data;

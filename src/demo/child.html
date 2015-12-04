@@ -30,9 +30,12 @@
             var logger = document.getElementById("logger");
 
             logger.innerHTML += logString + '<br />';
+
+            xWindowsComms1.sendMessage({action:'hello'});
+
         }, true);
 
-        function sendMessage (eventSource, payload){
+        function sendMessage (payload){
             var message = document.getElementById('message').value;
             var payload = {
                 action: 'standard',
