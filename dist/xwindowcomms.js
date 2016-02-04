@@ -1,5 +1,5 @@
-/*! xwindowcomms - v0.0.4 - 2015-12-04
-* Copyright (c) 2015 ; Licensed  */
+/*! xwindowcomms - v0.0.4 - 2016-01-21
+* Copyright (c) 2016 ; Licensed  */
 /*jslint browser: true */
 /*global console: false */
 /* exported xWindowComms */
@@ -45,9 +45,9 @@ window.xWindowComms = window.xWindowComms || (function() {
                 var eventer = window[eventMethod];
                 var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
-                eventer(messageEvent, function (e) {
+                eventer(messageEvent, function (event) {
                     if (debug === true) {
-                        console.log(e);
+                        console.log(event);
                     }
 
                     if (typeof event.data === 'object') {
@@ -67,7 +67,7 @@ window.xWindowComms = window.xWindowComms || (function() {
                                     }
                                 }
 
-                                callback(e);
+                                callback(event);
                             }
                         }
                     }
@@ -87,9 +87,9 @@ window.xWindowComms = window.xWindowComms || (function() {
                 var eventer = window[eventMethod];
                 var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
-                var eventFunction = function (e) {
+                var eventFunction = function (event) {
                     if (debug === true) {
-                        console.log(e);
+                        console.log(event);
                     }
 
                     if (typeof event.data === 'object') {
@@ -117,7 +117,7 @@ window.xWindowComms = window.xWindowComms || (function() {
                                 }
                             }
 
-                            callback(e);
+                            callback(event);
                         }
                     }
                 }.bind(this);
